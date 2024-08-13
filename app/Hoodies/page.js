@@ -3,7 +3,7 @@ import React from 'react';
 
 export async function getServerSideProps() {
   try {
-    const res = await fetch('http://your-droplet-ip/getproducts');
+    const res = await fetch('http://64.227.157.146/getproducts');
     const result = await res.json();
 
     return {
