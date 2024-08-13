@@ -17,6 +17,14 @@ const Mugs = () => {
       try {
         const res = await fetch('http://localhost:3000/getproducts');
         const result = await res.json();
+          return {
+    props: {
+      data: result,
+    },
+    revalidate: 60, // Regenerate the page every 60 seconds
+  };
+}
+
         console.log(result); // Log the fetched data structure to understand it better
 
         // Assuming result is { tshirts: [...] }
