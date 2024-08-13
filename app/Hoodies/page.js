@@ -1,49 +1,28 @@
-'use client';
+// pages/gethoodiese.js
+import React from 'react';
 
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
+export async function getServerSideProps() {
+  try {
+    const res = await fetch('http://your-droplet-ip/getproducts');
+    const result = await res.json();
 
-const Hoodiese = () => {
-  const [data, setData] = useState([]);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Use your production API URL here
-        const res = await fetch('http://your-droplet-ip/getproducts');
-        if (!res.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const result = await res.json();
-        console.log(result); // Log the fetched data structure to understand it better
-
-        // Assuming result is { tshirts: [...] }
-        if (result.tshirts && result.tshirts.length > 0) {
-          setData(result.tshirts.flatMap(item => Object.values(item))); // Flatten the array if necessary
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setError('Error fetching data.');
-      }
+    return {
+      props: { products: result.tshirts || [] }, // Pass products as props
     };
-
-    fetchData();
-  }, []);
-
-  if (error) {
-    return <div>Error: {error}</div>;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return {
+      props: { products: [] }, // Provide empty array on error
+    };
   }
+}
 
-  if (data.length === 0) {
-    return <div>Loading...</div>;
-  }
-
+const Hoodiese = ({ products }) => {
   return (
     <section className="text-gray-600 body-font flex justify-center">
       <div className="container px-5 py-24 mx-auto flex justify-center">
         <div className="flex-wrap -m-4 flex justify-center">
-          {data
+          {products
             .filter(product => product.category === 'Hoodiese')
             .map((product) => (
               <div key={product._id} className="lg:w-1/5 md:w-1/2 p-4 w-full shadow-lg mx-2">
